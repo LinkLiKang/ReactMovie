@@ -1,0 +1,22 @@
+.slide-container{
+    width: 800px;
+    margin: 20px auto;
+    overflow: hidden;
+    .slide-content{
+        height: 400px;
+        float: left;
+        margin-right: 400px;
+        .slide-list{
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .slide-img{
+            width: 360px;
+            height: 640px;
+            margin: 10px 0 0 10px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+        }
+    }
+}
