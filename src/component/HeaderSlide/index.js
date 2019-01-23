@@ -9,18 +9,21 @@ class HeaderSlide extends PureComponent {
             activeIndex: 0
         }
         this.timer = null
+        this.slide = null
+        this.handleMouseEnter = this.handleMouseEnter.bind(this)
+        this.handleMouseLeave = this.handleMouseLeave.bind(this)
     }
 
     render() {
         let { list } = this.props
         let activeItem = list.get(this.state.activeIndex)
         return (
-            <div className="slide-container">
+            <div className="slide-container" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
                 <div className="slide-content">
                     <div className="slide-img"  style={{backgroundImage: `url(${activeItem.get('img')})`}}></div>
-                    <h3 className="slide-name"> </h3>
-                    <div className="slide-year">年份：</div>
-                    <p className="slide-desc">剧情：</p>
+                    <h3 className="slide-name"> {activeItem.get('name')}</h3>
+                    <div className="slide-year">年份：{activeItem.get('year')}</div>
+                    <p className="slide-desc">剧情：{activeItem.get('desc')}</p>
                 </div>
 
                 <div className="slide-list">{this.getList()}</div>
@@ -29,10 +32,10 @@ class HeaderSlide extends PureComponent {
     }
 
     componentDidMount() {
-        const slide = this.slideCreator()
+        this.slide = this.slideCreator()
         this.timer = setInterval(() => {
-            this.setState({ activeIndex: slide.next().value })
-        }, 3000)
+            this.setState({ activeIndex: this.slide.next().value })
+        }, 5000)
     }
 
     componentWillUnmount() {
@@ -50,11 +53,21 @@ class HeaderSlide extends PureComponent {
 
     getList(){
         let { list } = this.props
-        list.map((item) => {
+        return list.map((item, index) => {
             return (
-            <div className="slide-list-item" style={{backgroundImage: `url(${item.get('img')})`}} key={item.get('id')}></div>
+            <div className={`slide-list-item ${index === this.state.activeIndex ? 'active' : ''}`} style={{backgroundImage: `url(${item.get('img')})`}} key={item.get('id')}></div>
             )
         })
+    }
+
+    handleMouseEnter(){
+        clearInterval(this.timer)
+    }
+
+    handleMouseLeave(){
+        this.timer = setInterval(() => {
+            this.setState({ activeIndex: this.slide.next().value })
+        }, 5000)
     }
 }
 
