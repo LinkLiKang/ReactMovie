@@ -6,9 +6,9 @@ class HeaderSlide extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            activeIndex: 0
+            activeIndex: 0,
+            timer: null
         }
-        this.timer = null
         this.slide = null
         this.handleMouseEnter = this.handleMouseEnter.bind(this)
         this.handleMouseLeave = this.handleMouseLeave.bind(this)
@@ -16,11 +16,11 @@ class HeaderSlide extends PureComponent {
 
     render() {
         let { list } = this.props
-        let activeItem = list.get(this.state.activeIndex)
+        let activeItem = list.get(0)
         return (
             <div className="slide-container" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
                 <div className="slide-content">
-                    <div className="slide-img"  style={{backgroundImage: `url(${activeItem.get('img')})`}}></div>
+                    <div className="slide-img" style={{ backgroundImage: `url(${activeItem.get('img')})` }}></div>
                     <h3 className="slide-name"> {activeItem.get('name')}</h3>
                     <div className="slide-year">年份：{activeItem.get('year')}</div>
                     <p className="slide-desc">剧情：{activeItem.get('desc')}</p>
@@ -33,13 +33,15 @@ class HeaderSlide extends PureComponent {
 
     componentDidMount() {
         this.slide = this.slideCreator()
-        this.timer = setInterval(() => {
-            this.setState({ activeIndex: this.slide.next().value })
-        }, 5000)
+        this.setState({
+            timer: setInterval(() => {
+                this.setState({ activeIndex: this.slide.next().value })
+            }, 5000)
+        })
     }
 
     componentWillUnmount() {
-        clearInterval(this.timer)
+        clearInterval(this.state.timer)
     }
 
 
@@ -51,23 +53,25 @@ class HeaderSlide extends PureComponent {
         }
     }
 
-    getList(){
+    getList() {
         let { list } = this.props
         return list.map((item, index) => {
             return (
-            <div className={`slide-list-item ${index === this.state.activeIndex ? 'active' : ''}`} style={{backgroundImage: `url(${item.get('img')})`}} key={item.get('id')}></div>
+                <div className={`slide-list-item ${index === this.state.activeIndex ? 'active' : ''}`} style={{ backgroundImage: `url(${item.get('img')})` }} key={item.get('id')}></div>
             )
         })
     }
 
-    handleMouseEnter(){
-        clearInterval(this.timer)
+    handleMouseEnter() {
+        clearInterval(this.state.timer)
     }
 
-    handleMouseLeave(){
-        this.timer = setInterval(() => {
-            this.setState({ activeIndex: this.slide.next().value })
-        }, 5000)
+    handleMouseLeave() {
+        this.setState({
+            timer: setInterval(() => {
+                this.setState({ activeIndex: this.slide.next().value })
+            }, 5000)
+        })
     }
 }
 

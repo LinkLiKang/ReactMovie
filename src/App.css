@@ -11,3 +11,8 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.nav-item{
+  text-decoration: none;
+  font-size: 18px;
+  padding: 5px 20px;
+}
